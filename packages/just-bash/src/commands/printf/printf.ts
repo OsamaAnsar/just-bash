@@ -481,7 +481,12 @@ function formatOnce(
       const specifier = format[i] || "";
       i++;
 
-      const fullSpec = format.slice(specStart, lengthStart) + specifier;
+      // bash rejects a length modifier in front of %, as with any other
+      // invalid conversion, so keep it in the spec to fail the same way.
+      const fullSpec =
+        specifier === "%" && lengthStart !== i - 1
+          ? format.slice(specStart, i)
+          : format.slice(specStart, lengthStart) + specifier;
 
       // Handle width/precision from args
       let adjustedSpec = fullSpec;

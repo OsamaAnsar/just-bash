@@ -48,6 +48,24 @@ describe("printf length modifiers", () => {
     expect(result.stderr).toBe("");
   });
 
+  it("accepts the modifiers with %s and %c, as bash does", async () => {
+    const result = await run(
+      "printf '[%hs] [%hhs] [%Ls] [%js] [%zs] [%lc] [%hc]\\n' a b c d e f g",
+    );
+    expect(result.stdout).toBe("[a] [b] [c] [d] [e] [f] [g]\n");
+    expect(result.stderr).toBe("");
+    expect(result.exitCode).toBe(0);
+  });
+
+  it("rejects a modifier in front of %%, as bash does", async () => {
+    for (const format of ["%l%", "%h%", "%ll%"]) {
+      const result = await run(`printf '${format}' 7`);
+      expect(result.stdout).toBe("");
+      expect(result.stderr).not.toBe("");
+      expect(result.exitCode).toBe(1);
+    }
+  });
+
   it("takes a width and precision from the arguments before the modifier", async () => {
     const result = await run("printf '[%*ld] [%.*lf]\\n' 4 7 2 3.14159");
     expect(result.stdout).toBe("[   7] [3.14]\n");

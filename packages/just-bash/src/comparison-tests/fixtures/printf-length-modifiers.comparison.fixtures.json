@@ -1,4 +1,18 @@
 {
+  "087c29d553c33ea2": {
+    "command": "printf '[%hs] [%hhs] [%Ls] [%js] [%zs] [%lc] [%hc]\\n' a b c d e f g",
+    "files": {},
+    "stdout": "[a] [b] [c] [d] [e] [f] [g]\n",
+    "stderr": "",
+    "exitCode": 0
+  },
+  "2df3f6151134e950": {
+    "command": "printf '%ll%' 7",
+    "files": {},
+    "stdout": "",
+    "stderr": "/usr/bin/bash: line 1: printf: `%': invalid format character\n",
+    "exitCode": 1
+  },
   "53859151a3c38ee8": {
     "command": "printf '[%*ld] [%.*lf]\\n' 4 7 2 3.14159",
     "files": {},
@@ -19,6 +33,13 @@
     "stdout": "[1] [    2] [3    ] [00004] [+5]\n",
     "stderr": "",
     "exitCode": 0
+  },
+  "b53395729abebe86": {
+    "command": "printf '%l%' 7",
+    "files": {},
+    "stdout": "",
+    "stderr": "/usr/bin/bash: line 1: printf: `%': invalid format character\n",
+    "exitCode": 1
   },
   "c051fbf56c28b388": {
     "command": "printf '[%lf] [%Lf] [%.2lf] [%le] [%lg] [%Lg] [%LE] [%lG]\\n' 2.5 1.5 3.14159 4.5 3.5 7.5 100 100",

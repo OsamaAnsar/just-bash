@@ -36,13 +36,19 @@ describe("printf length modifiers - Real Bash Comparison", () => {
     ],
     ["%s and %c", "printf '[%ls] [%lc] [%10ls]\\n' str xyz abc"],
     [
+      "on %s and %c of every kind",
+      "printf '[%hs] [%hhs] [%Ls] [%js] [%zs] [%lc] [%hc]\\n' a b c d e f g",
+    ],
+    ["a modifier before % (rejected)", "printf '%l%' 7"],
+    ["two modifiers before % (rejected)", "printf '%ll%' 7"],
+    [
       "width and precision from arguments",
       "printf '[%*ld] [%.*lf]\\n' 4 7 2 3.14159",
     ],
   ];
 
   for (const [name, command] of cases) {
-    it(`should accept ${name}`, async () => {
+    it(`should match bash for ${name}`, async () => {
       const env = await setupFiles(testDir, {});
       await compareOutputs(env, testDir, command);
     });
