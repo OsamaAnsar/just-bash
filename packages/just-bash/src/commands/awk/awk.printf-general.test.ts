@@ -61,4 +61,14 @@ describe("awk %g and %e", () => {
     );
     expect(result.stdout).toBe("1.23e+03 0.000123 3.14\n");
   });
+
+  it("the # flag keeps zeros and the decimal point in %g and %e", async () => {
+    const result = await awk(
+      'BEGIN { printf "[%#g] [%#g] [%#g] [%#.3g] [%#.3g] [%#.0g] [%#.1g] [%#.3G]\\n", 100000, 1, 0.0001, 100000, 100, 123, 5, 1e-10; printf "[%#e] [%#.0e] [%#E] [%#10g] [%#-10g|]\\n", 12345, 5, 12345, 100000, 100000 }',
+    );
+    expect(result.stdout).toBe(
+      "[100000.] [1.00000] [0.000100000] [1.00e+05] [100.] [1.e+02] [5.] [1.00E-10]\n" +
+        "[1.234500e+04] [5.e+00] [1.234500E+04] [   100000.] [100000.   |]\n",
+    );
+  });
 });

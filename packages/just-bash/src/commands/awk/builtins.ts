@@ -845,7 +845,7 @@ export function formatPrintf(
               "string_length",
             );
           }
-          let str = formatExponential(num, prec);
+          let str = formatExponential(num, prec, flags.includes("#"));
           if (spec === "E") str = str.toUpperCase();
           if (width) {
             const w = parseInt(width, 10);
@@ -871,7 +871,7 @@ export function formatPrintf(
               "string_length",
             );
           }
-          let str = formatGeneral(num, prec);
+          let str = formatGeneral(num, prec, flags.includes("#"));
           if (spec === "G") str = str.toUpperCase();
           if (width) {
             const w = parseInt(width, 10);

@@ -12,9 +12,26 @@ function padExponent(str: string): string {
   return str.replace(/e([+-])(\d)$/, "e$10$2");
 }
 
-/** The digits of `%e`: `d.ddde+XX`, with `precision` digits after the point. */
-export function formatExponential(num: number, precision: number): string {
-  return padExponent(num.toExponential(precision));
+/** Make sure the mantissa of `str` has a decimal point (`5e+00` -> `5.e+00`). */
+function forceDecimalPoint(str: string): string {
+  const split = str.indexOf("e");
+  const mantissa = split === -1 ? str : str.slice(0, split);
+  if (mantissa.includes(".")) return str;
+  return `${mantissa}.${split === -1 ? "" : str.slice(split)}`;
+}
+
+/**
+ * The digits of `%e`: `d.ddde+XX`, with `precision` digits after the point.
+ * The `#` flag (`alternate`) keeps the decimal point when `precision` is 0.
+ */
+export function formatExponential(
+  num: number,
+  precision: number,
+  alternate = false,
+): string {
+  if (!Number.isFinite(num)) return String(num);
+  const result = padExponent(num.toExponential(precision));
+  return alternate ? forceDecimalPoint(result) : result;
 }
 
 /**
@@ -24,12 +41,13 @@ export function formatExponential(num: number, precision: number): string {
  * Exponent form is used when the exponent X of the `%e` rendering, taken after
  * rounding, is below -4 or at least `precision`; otherwise fixed notation is
  * used. Trailing zeros of the mantissa (and a bare decimal point) are removed
- * unless `keepTrailingZeros` is set, which is what the `#` flag asks for.
+ * unless `alternate` is set, which is what the `#` flag asks for: it keeps the
+ * zeros and always prints the decimal point.
  */
 export function formatGeneral(
   num: number,
   precision: number,
-  keepTrailingZeros = false,
+  alternate = false,
 ): string {
   if (!Number.isFinite(num)) return String(num);
   const digits = precision === 0 ? 1 : precision;
@@ -37,7 +55,7 @@ export function formatGeneral(
   const exponent = Number(exponential.slice(exponential.indexOf("e") + 1));
   const result =
     exponent < -4 || exponent >= digits ? exponential : num.toPrecision(digits);
-  if (keepTrailingZeros) return padExponent(result);
+  if (alternate) return forceDecimalPoint(padExponent(result));
 
   // Only the mantissa is trimmed: the zeros of "1e+10" and "100000" are
   // significant, and the zeros of "1.50000e+10" are not.

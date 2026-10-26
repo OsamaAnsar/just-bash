@@ -29,6 +29,14 @@ describe("printf %g - Real Bash Comparison", () => {
     ["width", "printf '[%10g] [%-10g] [%010g]\\n' 100000 100000 1e10"],
     ["sign flags", "printf '[%+g] [% g] [%+g]\\n' 100000 100000 1e-10"],
     ["# flag", "printf '[%#g] [%#.3g] [%#g]\\n' 1.5 100000 1e10"],
+    [
+      "# flag decimal point",
+      "printf '[%#g] [%#g] [%#g] [%#.3g] [%#.0g] [%#.1g]\\n' 100000 1 0 100 123 5",
+    ],
+    [
+      "# flag with %e, width and padding",
+      "printf '[%#e] [%#.0e] [%#10g] [%#-10g|] [%#+g] [%#010g]\\n' 12345 5 100000 100000 100000 100000",
+    ],
   ];
 
   for (const [name, command] of cases) {

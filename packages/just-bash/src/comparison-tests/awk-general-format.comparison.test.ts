@@ -43,6 +43,10 @@ describe("awk %g, %e and OFMT - Real Bash Comparison", () => {
       `awk 'BEGIN { print 1234567.89, 0.000012345, 1e-10, 0.1 + 0.2 }'`,
     ],
     [
+      "# flag in %g and %e",
+      `awk 'BEGIN { printf "[%#g] [%#g] [%#.3g] [%#.0g] [%#.1g] [%#e] [%#.0e] [%#10g] [%#-10g|]\\n", 100000, 1, 100, 123, 5, 12345, 5, 100000, 100000 }'`,
+    ],
+    [
       "print with a custom OFMT",
       `awk 'BEGIN { OFMT = "%.3g"; print 1234.5678, 0.00012345, 3.14159 }'`,
     ],

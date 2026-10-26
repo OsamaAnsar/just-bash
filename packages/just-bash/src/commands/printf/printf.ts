@@ -1,7 +1,7 @@
 import { sprintf } from "sprintf-js";
 import { ExecutionLimitError } from "../../interpreter/errors.js";
 import { getErrorMessage } from "../../interpreter/helpers/errors.js";
-import { formatGeneral } from "../../number-format.js";
+import { formatExponential, formatGeneral } from "../../number-format.js";
 import type {
   ExecResult,
   RuntimeCommand,
@@ -1057,9 +1057,7 @@ function formatFloat(spec: string, specifier: string, num: number): string {
   const lowerSpec = specifier.toLowerCase();
 
   if (lowerSpec === "e") {
-    result = num.toExponential(precision);
-    // Ensure exponent has at least 2 digits (e+0 -> e+00)
-    result = result.replace(/e([+-])(\d)$/, "e$10$2");
+    result = formatExponential(num, precision, flags.includes("#"));
     if (specifier === "E") result = result.toUpperCase();
   } else if (lowerSpec === "f") {
     result = num.toFixed(precision);

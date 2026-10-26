@@ -56,4 +56,24 @@ describe("printf %g", () => {
     const result = await run("printf '[%#g] [%#.3g] [%#g]\\n' 1.5 100000 1e10");
     expect(result.stdout).toBe("[1.50000] [1.00e+05] [1.00000e+10]\n");
   });
+
+  it("always prints the decimal point with the # flag", async () => {
+    const result = await run(
+      "printf '[%#g] [%#g] [%#g] [%#g]\\n' 100000 1 0 0.0001; " +
+        "printf '[%#.3g] [%#.3g] [%#.0g] [%#.1g] [%#.3G]\\n' 100000 100 123 5 1e-10",
+    );
+    expect(result.stdout).toBe(
+      "[100000.] [1.00000] [0.00000] [0.000100000]\n" +
+        "[1.00e+05] [100.] [1.e+02] [5.] [1.00E-10]\n",
+    );
+  });
+
+  it("applies the # flag to %e and to width, sign and zero padding", async () => {
+    const result = await run(
+      "printf '[%#e] [%#.0e] [%#E] [%#10g] [%#-10g|] [%#+g] [%#010g]\\n' 12345 5 12345 100000 100000 100000 100000",
+    );
+    expect(result.stdout).toBe(
+      "[1.234500e+04] [5.e+00] [1.234500E+04] [   100000.] [100000.   |] [+100000.] [000100000.]\n",
+    );
+  });
 });
